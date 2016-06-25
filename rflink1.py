@@ -12,43 +12,69 @@ def readlineCR(port):
             rv = rv.strip('\r').strip('\n')
             return rv
 def sendData(data,port):
-   data="10;"+data+";\r\n"
-   print("Data Sent:" + data.strip('\r').strip('\n'))
-   port.write(data.encode())
+   senddata="10;"+data+";\r\n"
+   print("Data Sent:" + senddata.strip('\r').strip('\n'))
+   port.write(senddata.encode())
    time.sleep(1)
-   print("Data Received back:" + repr(readlineCR(port)))
-   logging.debug(repr(rcv))
-def echoData(data,port)
-   data="11;"+data+";\r\n"
+   if data == "REBOOT":
+     print("Rebooting RFLink")
+   else:
+     rcv = repr(readlineCR(port))
+     print("Data Received back:" + rcv)
+     logging.debug(rcv)
+def echoData(data,port):
+   data="11;"+data+"\r\n"
    print("Data Sent:" + data.strip('\r').strip('\n'))
    port.write(data.encode())
-def decodedata(data):
-   data=re.split(';',data)
-   print("Third item in list is " + data[2])
-   print("Forth item in list is " + data[3])
-   print("Fifth item in list is " + data[4])
-   print("Sixth item in list is " + data[5])
-   if data[2]=='DEBUG':
-      logging.debug(repr(rcv))
+def decodepacket(packetdata):
+   packet=re.split(';',packetdata)
+   print("Packet contains: " + str(len(packet)) + " items")
+   if len(packet) > 3:
+      packet_type=packet[0]
+      message_id=packet[1]
+      device_name=packet[2]
+      if packet[2]=='DEBUG':
+         logging.debug(packetdata)
+def initialiserflink(port):
+   print("InitialiseRFLink")
+   time.sleep(2) # delay for 2 seconds
+   rcv = readlineCR(port)
+   print("Data Received:" + repr(rcv))
+   time.sleep(2) # delay for 2 seconds
+   sendData('REBOOT',port)
+   time.sleep(2) # delay for 2 seconds
+   rcv = readlineCR(port)
+   version=int((re.search(r"(\d{2}$)",(re.split(';',repr(rcv))[2]))).group())
+   print("Data Received:" + repr(rcv))
+   time.sleep(2) # delay for 2 seconds
+   print("Version: " + str(version))
+   if version >= 42:
+      rcv = readlineCR(port)
+      print("Data Received:" + repr(rcv))
+   print("Data Received:" + repr(rcv))
+   sendData('VERSION',port)
 port = serial.Serial("/dev/ttyACM0", baudrate=57600, timeout=3.0)
-time.sleep(2) # delay for 2 seconds
-rcv = readlineCR(port)
-print("Data Received:" + repr(rcv))
-sendData('REBOOT',port)
-time.sleep(2)
+initialiserflink(port)
 sendData('RFUDEBUG=ON',port)
-#sendData('RFDEBUG=OFF',port)
-sendData('VERSION',port)
-#sendData('PING',port)
-#sendData('RTS;0f303f;0;OFF',port)
-#sendData('RTS;0fb0bf;0;OFF',port)
-#sendData('RTS;0f707f;0;OFF',port)
-#sendData('RTS;0f717f;0;OFF',port)
-#sendData('RTS;0ff0ff;0;OFF',port)
-#sendData('RTS;077880;0;OFF',port)
-#sendData('Byron;112233;02;OFF',
+#sendData('RFDEBUG=ON',port)
+#sendData('Byron;00ff;01;ON',port) # westminster
+#time.sleep(10)
+#sendData('Byron;00ff;02;ON',port) # dog barking
+#time.sleep(10)
+#sendData('Byron;00ff;06;ON',port) # Its a small world
+#time.sleep(10)
+#sendData('Byron;00ff;09;ON',port) # Circus theme
+#time.sleep(10)
+#sendData('Byron;00ff;03;ON',port) # ding-dong
+#time.sleep(10)
+#sendData('Byron;00ff;05;ON',port) # telephone
+#time.sleep(10)
+#sendData('Byron;00ff;0d;ON',port) # banjo on my knee
+#time.sleep(10)
+#sendData('Byron;00ff;0e;ON',port) # twinkle-twinkle
+#echoData('20;47;Byron SX;ID=a66a;CHIME=09;',port)
 while True:
     rcv = readlineCR(port)
     print("Data Received:" + repr(rcv))
-    decodedata(repr(rcv))
+    decodepacket(repr(rcv))
 
