@@ -41,6 +41,9 @@ def initialiserflink(port):
    rcv = readlineCR(port)
    print("Data Received:" + repr(rcv))
    time.sleep(2) # delay for 2 seconds
+   rcv = readlineCR(port)
+   print("Data Received:" + repr(rcv))
+   time.sleep(2) # delay for 2 seconds
    sendData('REBOOT',port)
    time.sleep(2) # delay for 2 seconds
    rcv = readlineCR(port)
@@ -51,12 +54,10 @@ def initialiserflink(port):
    if version >= 42:
       rcv = readlineCR(port)
       print("Data Received:" + repr(rcv))
-   print("Data Received:" + repr(rcv))
-   sendData('VERSION',port)
 port = serial.Serial("/dev/ttyACM0", baudrate=57600, timeout=3.0)
 initialiserflink(port)
-sendData('RFUDEBUG=ON',port)
-#sendData('RFDEBUG=ON',port)
+#sendData('RFUDEBUG=ON',port)
+sendData('RFDEBUG=ON',port)
 #sendData('Byron;00ff;01;ON',port) # westminster
 #time.sleep(10)
 #sendData('Byron;00ff;02;ON',port) # dog barking
