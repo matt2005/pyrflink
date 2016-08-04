@@ -27,14 +27,14 @@ def echoData(data,port):
    print("Data Sent:" + data.strip('\r').strip('\n'))
    port.write(data.encode())
 def decodepacket(packetdata):
-   packet=re.split(';',packetdata)
-   print("Packet contains: " + str(len(packet)) + " items")
-   if len(packet) > 3:
-      packet_type=packet[0]
-      message_id=packet[1]
-      device_name=packet[2]
-      if packet[2]=='DEBUG':
-         logging.debug(packetdata)
+    packet=re.split(';',packetdata)
+    print("Packet contains: " + str(len(packet)) + " items")
+    if len(packet) > 3:
+        packet_type=packet[0]
+        message_id=packet[1]
+        device_name=packet[2]
+        if packet[2]=='DEBUG':
+            logging.debug(packetdata)
 def initialiserflink(port):
    print("InitialiseRFLink")
    time.sleep(2) # delay for 2 seconds
@@ -57,7 +57,7 @@ def initialiserflink(port):
 port = serial.Serial("/dev/ttyACM0", baudrate=57600, timeout=3.0)
 initialiserflink(port)
 #sendData('RFUDEBUG=ON',port)
-sendData('RFDEBUG=ON',port)
+#sendData('RFDEBUG=ON',port)
 #sendData('Byron;00ff;01;ON',port) # westminster
 #time.sleep(10)
 #sendData('Byron;00ff;02;ON',port) # dog barking
