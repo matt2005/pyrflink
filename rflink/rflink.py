@@ -367,6 +367,7 @@ class Message:
         """Setup message."""
         self.node_id = 0
         self.message_id = 0
+		self.child_is = 0
         self.type = 0
         self.ack = 0
         self.sub_type = 0
