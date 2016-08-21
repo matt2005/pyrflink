@@ -30,7 +30,7 @@ class Gateway(object):
         if persistence:
             self._safe_load_sensors()
         if protocol_version == '43':
-            _const = import_module('const_43')
+            _const = import_module('rflink.const_43')
         self.const = _const
     def _handle_presentation(self, msg):
         """Process a presentation message."""
@@ -115,29 +115,16 @@ class Gateway(object):
         elif msg.type == self.const.MessageType.internal:
             return self._handle_internal(msg)
         return None
-    def _save_pickle(self, filename):
-        """Save sensors to pickle file."""
-        with open(filename, 'wb') as file_handle:
-            pickle.dump(self.sensors, file_handle, pickle.HIGHEST_PROTOCOL)
-            file_handle.flush()
-            os.fsync(file_handle.fileno())
-    def _load_pickle(self, filename):
-        """Load sensors from pickle file."""
-        try:
-            with open(filename, 'rb') as file_handle:
-                self.sensors = pickle.load(file_handle)
-        except IOError:
-            pass
     def _save_json(self, filename):
         """Save sensors to json file."""
         with open(filename, 'w') as file_handle:
-            json.dump(self.sensors, file_handle, cls=MySensorsJSONEncoder)
+            json.dump(self.sensors, file_handle, cls=RFLinkJSONEncoder)
             file_handle.flush()
             os.fsync(file_handle.fileno())
     def _load_json(self, filename):
         """Load sensors from json file."""
         with open(filename, 'r') as file_handle:
-            self.sensors = json.load(file_handle, cls=MySensorsJSONDecoder)
+            self.sensors = json.load(file_handle, cls=RFLinkJSONDecoder)
     def _save_sensors(self):
         """Save sensors to file."""
         fname = os.path.realpath(self.persistence_file)
@@ -374,6 +361,7 @@ class Message:
         self.type=0
         self.node_id = 0
         self.message_id = ''
+        self.child_id = 0
         self.device_name = ''
         self.device_id = ''
         self.payload = ''  # All data except device_name, payload are integers
@@ -411,11 +399,9 @@ class Message:
                 self.message_id=list_data[0]
                 del list_data[0]
                 self.payload = list_data
-                LOGGER.info('Internal Message: {0}',self.payload)
-                print(('Internal Message: {0}').format(self.payload))
+                LOGGER.info(('Internal Message: {0}').format(self.payload))
             else:
                 LOGGER.info('Undecoded: {0}',self.payload)
-                print(('Undecoded: {0}').format(self.payload))
         except ValueError:
             LOGGER.warning(('Error decoding message from gateway, bad data received: {0}').format(data))
             raise ValueError
@@ -440,7 +426,7 @@ class Sensor:
         self.type = None
         self.battery_level = 0
         self.protocol_version = None
-        if message.type ==2:
+        if message.type == 2:
             for k in message.payload:
                 data = re.split('=',k)
                 if len(data) >= 2:
@@ -474,25 +460,49 @@ class ChildSensor:
         # pylint: disable=invalid-name
         self.type = child_type
         self.values = {}
-if os.name == 'posix': #only run if on linux
-    print('Running on Linux')
-    GATEWAY = SerialGateway('/dev/ttyACM0', event, False,'43')
-    GATEWAY.debug = True
-    GATEWAY.start()
-    time.sleep(40)
-    # To set sensor 1, child 1, sub-type V_LIGHT (= 2), with value 1.
-    #GATEWAY.set_child_value(1, 1, 2, 1)
-    GATEWAY.stop()
-elif os.name == 'nt':
-    print('Running on Windows')
-    #RFLINK=Message(received)
-    messages=('20;2D;Esic;ID=0001;TEMP=00cf;WINCHL=00FF;WINTMP=1234;HUM=16;BAT=OK;',
-    '20;00;Nodo RadioFrequencyLink - RFLink Gateway V1.1 - R43;',
-    '20;01;NodoNRF=ON;','20;02;RFDEBUG=ON;')
-    send='10;BYRON;00009F;01;ON;'
-    for m in messages:
-        Output=Sensor(Message(m)).children
-        if len(Output) > 0: 
-            print(Output)
+class RFLinkJSONEncoder(json.JSONEncoder):
+    """JSON encoder."""
+
+    def default(self, obj):  # pylint: disable=E0202
+        """Serialize obj into JSON."""
+        if isinstance(obj, Sensor):
+            return {
+                'sensor_id': obj.sensor_id,
+                'children': obj.children,
+                'type': obj.type,
+                'sketch_name': obj.sketch_name,
+                'sketch_version': obj.sketch_version,
+                'battery_level': obj.battery_level,
+                'protocol_version': obj.protocol_version,
+            }
+        if isinstance(obj, ChildSensor):
+            return {
+                'id': obj.id,
+                'type': obj.type,
+                'values': obj.values,
+            }
+        return json.JSONEncoder.default(self, obj)
+class RFLinkJSONDecoder(json.JSONDecoder):
+    """JSON decoder."""
+
+    def __init__(self):
+        """Setup decoder."""
+        json.JSONDecoder.__init__(self, object_hook=self.dict_to_object)
+
+    def dict_to_object(self, obj):  # pylint: disable=R0201
+        """Return object from dict."""
+        if not isinstance(obj, dict):
+            return obj
+        if 'sensor_id' in obj:
+            sensor = Sensor(obj['sensor_id'])
+            sensor.__dict__.update(obj)
+            return sensor
+        elif all(k in obj for k in ['id', 'type', 'values']):
+            child = ChildSensor(obj['id'], obj['type'])
+            child.values = obj['values']
+            return child
+        elif all(k.isdigit() for k in obj.keys()):
+            return {int(k): v for k, v in obj.items()}
+        return obj
 
 
