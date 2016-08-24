@@ -392,7 +392,7 @@ class Message:
                 del list_data[-1]
                 self.node_id=list_data[0]
                 del list_data[0]
-                self.child_id=255 #list_data[0]
+                self.child_id=0 #list_data[0]
                 del list_data[0]
                 self.type=0
                 self.ack=0
