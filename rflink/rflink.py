@@ -42,6 +42,14 @@ class Gateway(object):
             self.sensors[msg.node_id].type = msg.sub_type
             self.sensors[msg.node_id].rflink_version = msg.payload
             self.alert(msg.node_id)
+			if msg.type == 2:
+            for k in msg.payload:
+                data = re.split('=',k)
+                if len(data) >= 2:
+                    #print(data[0])
+                    self.sensors[msg.node_id].add_child_sensor(data[0])
+                    self.sensors[msg.node_id].set_child_value(msg.child_id,data[0],data[1])
+                    self.translate_value(data[0])
         else:
             # this is a presentation of a child sensor
             if not self.is_sensor(msg.node_id):
