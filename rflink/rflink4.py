@@ -392,7 +392,7 @@ class Message:
                 del list_data[0]
                 self.payload = list_data
                 LOGGER.info(('Sensor: {0}').format(self.payload))
-            elif len(list_data) == 3:
+            elif len(list_data) == 4:
                 self.type=1
                 self.node_id=list_data[0]
                 del list_data[0]
