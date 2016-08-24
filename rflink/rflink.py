@@ -462,6 +462,12 @@ class Sensor:
                             type=msg_type, ack=ack, sub_type=value_type,
                             payload=value)
         return None
+    def translate_value(self,child_type):
+        """convert a value"""
+        if child_type in self.children:
+            if child_type in ('TEMP','WINCHL','WINTMP','RAIN','RAINRATE','WINSP','AWINSP','WINGS'):
+                self.children[child_type] = str(int(self.children[child_type],16)/10)
+        return None
 class ChildSensor:
     """Represent a child sensor."""
 
