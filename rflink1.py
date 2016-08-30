@@ -31,10 +31,23 @@ def decodepacket(packetdata):
     print("Packet contains: " + str(len(packet)) + " items")
     if len(packet) > 3:
         packet_type=packet[0]
-        message_id=packet[1]
-        device_name=packet[2]
-        if packet[2]=='DEBUG':
+        del packet[0]
+        message_id=packet[0]
+        del packet[0]
+        device_name=packet[0]
+        del packet[0]
+        del packet[-1]
+        if device_name=='DEBUG':
             logging.debug(packetdata)
+        for k in packet:
+            data = re.split('=',k)
+            if len(data) >= 2:
+                print(data[0])
+                print(data[1])
+                if data[0] in ('TEMP','WINCHL','WINTMP','RAIN','RAINRATE','WINSP','AWINSP','WINGS'):
+                    data[1] = str(int(data[1],16)/10)
+                print(data[1])
+        return None
 def initialiserflink(port):
    print("InitialiseRFLink")
    time.sleep(2) # delay for 2 seconds
