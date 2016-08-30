@@ -6,11 +6,10 @@ class MessageType(IntEnum):
     """RFlink message types."""
 
     # pylint: disable=too-few-public-methods
-    presentation = 0        # sent by a node when presenting attached sensors
-    set = 1                 # sent from/to sensor when value should be updated
-    req = 2                 # requests a variable value
-    internal = 3            # internal message
-    stream = 4              # OTA firmware updates
+    internal = 10            # rflink 
+    echo = 11                # master to the master (Echo command - creation of devices)
+    received = 20            # from the RFLink Gateway to the master
+
 
 
 class Presentation(IntEnum):
