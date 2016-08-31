@@ -76,7 +76,7 @@ def initialiserflink(port):
 port = serial.Serial("/dev/ttyACM0", baudrate=57600, timeout=3.0)
 initialiserflink(port)
 #sendData('RFUDEBUG=ON',port)
-#sendData('RFDEBUG=ON',port)
+sendData('RFDEBUG=ON',port)
 #sendData('Byron;00ff;01;ON',port) # westminster
 #time.sleep(10)
 #sendData('Byron;00ff;02;ON',port) # dog barking
