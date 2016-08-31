@@ -156,6 +156,7 @@ class SerialGateway(Gateway, threading.Thread):
                 line = ""
                 line = self.readlineCR()
                 if (line != '' or line != None):
+                    print(line)
                     continue
                 elif (line == ''):
                     continue
@@ -172,7 +173,7 @@ class SerialGateway(Gateway, threading.Thread):
                 self.disconnect()
                 continue
             try:
-                string = line.decode()
+                string = line
             except ValueError:
                 LOGGER.warning(
                     'Error decoding message from gateway, '
