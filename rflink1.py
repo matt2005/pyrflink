@@ -88,7 +88,7 @@ while True:
     line = None
     line = readlineCR(port)
     if (line != '' and line != None):
-        line.strip('\r').strip('\n')
+        line = line.strip('\r').strip('\n')
         print("Data Received:" + line)
     elif (line == None):
         print('elif')
