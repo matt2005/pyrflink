@@ -185,13 +185,13 @@ class SerialGateway(Gateway, threading.Thread):
             self.serial.write(packet.encode())
 
     def readlineCR(self):
-        rv = ""
+        str = ""
         while True:
-            ch = self.serial.read().decode()
-            rv += ch
-            if ch=='\r':
-                rv = rv.strip('\r').strip('\n')
-                return rv
+            ch = self.serial.read()
+            if(ch == '\r' or ch == '\n'):  
+                break
+            str += ch
+            return str
 
 
 class Packet:
