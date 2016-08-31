@@ -9,7 +9,7 @@ def readlineCR(port):
         line = port.readline().decode()
         if (line != '' and line != None):
             line = line.strip('\r').strip('\n')
-            print("Data Received:" + line)
+            #print("Data Received:" + line)
         elif (line == None):
             print('elif')
         elif (line == ''):
@@ -18,7 +18,6 @@ def readlineCR(port):
             print('elif space')
         else:
             print('else')
-            print(line)
         return line
 def sendData(data,port):
    senddata="10;"+data+";\r\n"
@@ -97,9 +96,6 @@ initialiserflink(port)
 #sendData('Byron;00ff;0e;ON',port) # twinkle-twinkle
 #echoData('20;47;Byron SX;ID=a66a;CHIME=09;',port)
 while True:
-    line = None
-    line = readlineCR(port)
-    if (line != '' and line != None):
-        print("Data Received:" + line)
+    readlineCR(port)
  #   Packet.(repr(rcv))
 
