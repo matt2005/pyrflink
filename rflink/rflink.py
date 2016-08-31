@@ -155,7 +155,7 @@ class SerialGateway(Gateway, threading.Thread):
             try:
                 line = None
                 line = repr(self.readlineCR())
-                if !(line == None):
+                if not (line == None):
                     continue
             except serial.SerialException:
                 LOGGER.exception('Serial exception')
