@@ -4,10 +4,22 @@ import logging
 import re
 logging.basicConfig(filename='debug.log',level=logging.DEBUG)
 def readlineCR(port):
-    str = ""
+    line = ""
     while True:
-        str = port.readline().decode()
-        return str
+        line = port.readline().decode()
+        if (line != '' and line != None):
+            line = line.strip('\r').strip('\n')
+            print("Data Received:" + line)
+        elif (line == None):
+            print('elif')
+        elif (line == ''):
+            print('elif no space')
+        elif (line == ' '):
+            print('elif space')
+        else:
+            print('else')
+            print(line)
+        return line
 def sendData(data,port):
    senddata="10;"+data+";\r\n"
    print("Data Sent:" + senddata.strip('\r').strip('\n'))
@@ -88,17 +100,6 @@ while True:
     line = None
     line = readlineCR(port)
     if (line != '' and line != None):
-        line = line.strip('\r').strip('\n')
         print("Data Received:" + line)
-    elif (line == None):
-        print('elif')
-    elif (line == ''):
-        print('elif no space')
-    elif (line == ' '):
-        print('elif space')
-    else:
-        print('else')
-        print(line)
-        continue
  #   Packet.(repr(rcv))
 
