@@ -153,7 +153,7 @@ class SerialGateway(Gateway, threading.Thread):
             if response is not None:
                 self.send(response.encode())
             try:
-                line = self.serial.readline(eol='\n\r')
+                line = self.readlineCR(self.serial)
                 if not line:
                     continue
             except serial.SerialException:
@@ -183,6 +183,15 @@ class SerialGateway(Gateway, threading.Thread):
         # Lock to make sure only one thread writes at a time to serial port.
         with self.lock:
             self.serial.write(packet.encode())
+
+    def readlineCR(port):
+        rv = ""
+        while True:
+            ch = port.read().decode()
+            rv += ch
+            if ch=='\r':
+                rv = rv.strip('\r').strip('\n')
+                return rv
 
 
 class Packet:
