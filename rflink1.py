@@ -4,13 +4,15 @@ import logging
 import re
 logging.basicConfig(filename='debug.log',level=logging.DEBUG)
 def readlineCR(port):
-    rv = ""
+    str = ""
     while True:
         ch = port.read().decode()
-        rv += ch
-        if ch=='\r':
-            rv = rv.strip('\r').strip('\n')
-            return rv
+        print(ch)
+            ch = ch.decode()
+            if(ch == '\r' or ch == '\n'):  
+                return str
+            else:
+                str += ch
 def sendData(data,port):
    senddata="10;"+data+";\r\n"
    print("Data Sent:" + senddata.strip('\r').strip('\n'))
@@ -90,5 +92,5 @@ initialiserflink(port)
 while True:
     rcv = readlineCR(port)
     print("Data Received:" + repr(rcv))
-    decodepacket(repr(rcv))
+    Packet.(repr(rcv))
 
