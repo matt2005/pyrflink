@@ -6,15 +6,12 @@ logging.basicConfig(filename='debug.log',level=logging.DEBUG)
 def readlineCR(port):
     str = ""
     while True:
-        ch = port.readline()
-        print(ch)
-        ch = ch.decode()
-        if(ch == '\r' or ch == '\n'):  
-            return str
-        elif (ch==''):
+        str = port.readline().decode()
+        print(str)
+        if (str==''):
             return None
         else:
-            str += ch
+            return str
 def sendData(data,port):
    senddata="10;"+data+";\r\n"
    print("Data Sent:" + senddata.strip('\r').strip('\n'))
@@ -92,7 +89,9 @@ initialiserflink(port)
 #sendData('Byron;00ff;0e;ON',port) # twinkle-twinkle
 #echoData('20;47;Byron SX;ID=a66a;CHIME=09;',port)
 while True:
-    rcv = readlineCR(port)
-    print("Data Received:" + repr(rcv))
+    line = None
+    line = readlineCR(port)
+    if (line != ''):
+        print("Data Received:" + line)
     Packet.(repr(rcv))
 
