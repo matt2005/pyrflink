@@ -191,11 +191,13 @@ class SerialGateway(Gateway, threading.Thread):
     def readlineCR(self):
         str = ""
         while True:
-            ch = self.serial.read()
+            ch = self.serial.readline()
             print(ch)
             ch = ch.decode()
             if(ch == '\r' or ch == '\n'):  
                 return str
+            elif (ch==''):
+                return None
             else:
                 str += ch
 

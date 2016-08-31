@@ -6,11 +6,13 @@ logging.basicConfig(filename='debug.log',level=logging.DEBUG)
 def readlineCR(port):
     str = ""
     while True:
-        ch = port.read()
+        ch = port.readline()
         print(ch)
             ch = ch.decode()
             if(ch == '\r' or ch == '\n'):  
                 return str
+            elif (ch==''):
+                break
             else:
                 str += ch
 def sendData(data,port):
