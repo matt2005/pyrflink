@@ -8,13 +8,13 @@ def readlineCR(port):
     while True:
         ch = port.readline()
         print(ch)
-            ch = ch.decode()
-            if(ch == '\r' or ch == '\n'):  
-                return str
-            elif (ch==''):
-                break
-            else:
-                str += ch
+        ch = ch.decode()
+        if(ch == '\r' or ch == '\n'):  
+            return str
+        elif (ch==''):
+            return None
+        else:
+            str += ch
 def sendData(data,port):
    senddata="10;"+data+";\r\n"
    print("Data Sent:" + senddata.strip('\r').strip('\n'))

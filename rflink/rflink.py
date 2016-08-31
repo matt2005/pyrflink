@@ -153,7 +153,7 @@ class SerialGateway(Gateway, threading.Thread):
             if response is not None:
                 self.send(response.encode())
             try:
-                line = self.readlineCR()
+                line = repr(self.readlineCR())
                 if not line:
                     continue
             except serial.SerialException:
