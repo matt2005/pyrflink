@@ -191,8 +191,8 @@ class SerialGateway(Gateway, threading.Thread):
         while True:
             line = self.serial.readline().decode()
             if (line != '' and line != None):
-            line = line.strip('\r').strip('\n')
-            return line
+                line = line.strip('\r').strip('\n')
+                return line
 
 
 class Packet:
