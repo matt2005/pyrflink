@@ -154,8 +154,8 @@ class SerialGateway(Gateway, threading.Thread):
                 self.send(response.encode())
             try:
                 line = None
-                line = repr(self.readlineCR())
-                if (line != None):
+                line = self.readlineCR()
+                if (line != '' and line != None):
                     continue
             except serial.SerialException:
                 LOGGER.exception('Serial exception')
@@ -192,11 +192,8 @@ class SerialGateway(Gateway, threading.Thread):
     def readlineCR(self):
         str = ""
         while True:
-            str = self.serial.readline()
-            if (str==''):
-                return None
-            else:
-                return str
+            str = self.serial.readline().decode()
+            return str
 
 
 class Packet:

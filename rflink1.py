@@ -7,11 +7,7 @@ def readlineCR(port):
     str = ""
     while True:
         str = port.readline().decode()
-        print(str)
-        if (str==''):
-            return None
-        else:
-            return str
+        return str
 def sendData(data,port):
    senddata="10;"+data+";\r\n"
    print("Data Sent:" + senddata.strip('\r').strip('\n'))
@@ -91,7 +87,7 @@ initialiserflink(port)
 while True:
     line = None
     line = readlineCR(port)
-    if (line != ''):
+    if (line != '' and line != None):
         print("Data Received:" + line)
     Packet.(repr(rcv))
 
