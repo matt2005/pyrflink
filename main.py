@@ -1,5 +1,5 @@
 """Example for using pyrflink."""
-import rflik.rflink as rflink
+import rflink.rflink as rflink
 import time
 
 def event(update_type, nid):
