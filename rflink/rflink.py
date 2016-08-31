@@ -187,7 +187,9 @@ class SerialGateway(Gateway, threading.Thread):
     def readlineCR(self):
         str = ""
         while True:
-            ch = self.serial.read().decode()
+            ch = self.serial.read()
+            print(ch)
+            ch = ch.decode()
             if(ch == '\r' or ch == '\n'):  
                 return str
             else:
