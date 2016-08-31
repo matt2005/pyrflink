@@ -96,6 +96,6 @@ initialiserflink(port)
 #sendData('Byron;00ff;0e;ON',port) # twinkle-twinkle
 #echoData('20;47;Byron SX;ID=a66a;CHIME=09;',port)
 while True:
-    readlineCR(port)
+    print(readlineCR(port))
  #   Packet.(repr(rcv))
 
