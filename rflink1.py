@@ -100,5 +100,5 @@ while True:
         print('else')
         print(line)
         continue
-    Packet.(repr(rcv))
+ #   Packet.(repr(rcv))
 
