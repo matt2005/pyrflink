@@ -153,7 +153,7 @@ class SerialGateway(Gateway, threading.Thread):
             if response is not None:
                 self.send(response.encode())
             try:
-                line = self.readlineCR(self.serial)
+                line = self.readlineCR()
                 if not line:
                     continue
             except serial.SerialException:
@@ -184,10 +184,10 @@ class SerialGateway(Gateway, threading.Thread):
         with self.lock:
             self.serial.write(packet.encode())
 
-    def readlineCR(port):
+    def readlineCR(self):
         rv = ""
         while True:
-            ch = port.read().decode()
+            ch = self.serial.read().decode()
             rv += ch
             if ch=='\r':
                 rv = rv.strip('\r').strip('\n')
