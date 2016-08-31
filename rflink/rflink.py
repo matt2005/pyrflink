@@ -191,7 +191,7 @@ class SerialGateway(Gateway, threading.Thread):
             if(ch == '\r' or ch == '\n'):  
                 break
             str += ch
-            return str
+        return str
 
 
 class Packet:
