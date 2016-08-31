@@ -88,6 +88,17 @@ while True:
     line = None
     line = readlineCR(port)
     if (line != '' and line != None):
+        line.strip('\r').strip('\n')
         print("Data Received:" + line)
+    elif (line == None):
+        print('elif')
+    elif (line == ''):
+        print('elif no space')
+    elif (line == ' '):
+        print('elif space')
+    else:
+        print('else')
+        print(line)
+        continue
     Packet.(repr(rcv))
 
