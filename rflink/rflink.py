@@ -187,11 +187,11 @@ class SerialGateway(Gateway, threading.Thread):
     def readlineCR(self):
         str = ""
         while True:
-            ch = self.serial.read()
+            ch = self.serial.read().decode()
             if(ch == '\r' or ch == '\n'):  
-                break
-            str += ch
-        return str
+                return str
+            else:
+                str += ch
 
 
 class Packet:
