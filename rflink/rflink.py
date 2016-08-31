@@ -45,7 +45,7 @@ class Gateway(object):
             msg = Packet(data)
         except ValueError:
             return None
-        if msg.type == self.const.MessageType.received:
+        if msg.packet_type == self.const.MessageType.received:
             return msg.decoded
         return None
 
