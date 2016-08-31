@@ -6,7 +6,7 @@ logging.basicConfig(filename='debug.log',level=logging.DEBUG)
 def readlineCR(port):
     str = ""
     while True:
-        ch = port.read().decode()
+        ch = port.read()
         print(ch)
             ch = ch.decode()
             if(ch == '\r' or ch == '\n'):  
