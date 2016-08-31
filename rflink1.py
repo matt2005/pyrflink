@@ -96,5 +96,6 @@ sendData('RFDEBUG=ON',port)
 while True:
     rcv = readlineCR(port)
     print("Data Received:" + repr(rcv))
+    print(decodepacket(rcv))
  #   Packet.(repr(rcv))
 
