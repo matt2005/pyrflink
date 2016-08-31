@@ -159,6 +159,10 @@ class SerialGateway(Gateway, threading.Thread):
             except serial.SerialException:
                 LOGGER.exception('Serial exception')
                 continue
+            except ValueError:
+                LOGGER.warning(
+                    'Error decoding message from gateway, '
+                    'probably received bad byte. ')
             except TypeError:
                 # pyserial has a bug that causes a TypeError to be thrown when
                 # the port disconnects instead of a SerialException
