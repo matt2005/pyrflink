@@ -10,14 +10,14 @@ def readlineCR(port):
         if (line != '' and line != None):
             line = line.strip('\r').strip('\n')
             #print("Data Received:" + line)
-        elif (line == None):
-            print('elif')
-        elif (line == ''):
-            print('elif no space')
-        elif (line == ' '):
-            print('elif space')
-        else:
-            print('else')
+        #elif (line == None):
+        #    print('elif')
+        #elif (line == ''):
+        #    print('elif no space')
+        #elif (line == ' '):
+        #    print('elif space')
+        #else:
+        #    print('else')
         return line
 def sendData(data,port):
    senddata="10;"+data+";\r\n"
